@@ -2,7 +2,6 @@ package com.tuxpoli.customer;
 
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,43 +17,37 @@ public class CustomerJPARepositoryAdapter implements CustomerRepository {
 
     @Override
     public boolean existsCustomerByEmail(String email) {
-        return true;
+        return this.customerJPARepository.existsCustomerByEmail(email);
     }
 
     @Override
     public boolean existsCustomerById(Long id) {
-        return true;
+        return this.customerJPARepository.existsCustomerById(id);
     }
 
     @Override
     public Long createCustomer(Customer customer) {
-        return 1L;
+        return this.customerJPARepository.save(customer).getId();
     }
 
     @Override
     public List<Customer> getAllCustomers() {
-        return new ArrayList<>();
+        return this.customerJPARepository.findAll();
     }
 
     @Override
     public Optional<Customer> getCustomerById(Long id) {
-        return Optional.of(
-                new Customer(
-                        1L,
-                        "John Doe",
-                        "johndoe@email.com",
-                        1994
-                )
-        );
+        return this.customerJPARepository.findById(id);
     }
 
     @Override
     public Long updateCustomer(Customer customer) {
-        return 1L;
+        return this.customerJPARepository.save(customer).getId();
     }
 
     @Override
     public Long deleteCustomer(Long id) {
-        return 1L;
+        this.customerJPARepository.deleteById(id);
+        return id;
     }
 }
