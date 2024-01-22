@@ -6,12 +6,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class CustomerJPARepositoryAdapterTest {
 
     private AutoCloseable autoCloseable;
+
     private CustomerJPARepositoryAdapter underTest;
 
     @Mock private CustomerJPARepository customerJPARepository;
@@ -54,6 +56,7 @@ class CustomerJPARepositoryAdapterTest {
     @Test
     void createCustomer() {
         // given
+        Long id = 1L;
         Customer customer = new Customer(
                 "John Doe",
                 "johndoe@email.com",
@@ -61,7 +64,7 @@ class CustomerJPARepositoryAdapterTest {
         );
         when(customerJPARepository.save(customer)).thenReturn(
                 new Customer(
-                        1L,
+                        id,
                         customer.getName(),
                         customer.getEmail(),
                         customer.getYearOfBirth()
@@ -69,10 +72,11 @@ class CustomerJPARepositoryAdapterTest {
         );
 
         // when
-        underTest.createCustomer(customer);
+        Long actual = underTest.createCustomer(customer);
 
         // then
         verify(customerJPARepository).save(customer);
+        assertThat(actual).isEqualTo(id);
     }
 
     @Test
