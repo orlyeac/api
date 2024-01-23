@@ -149,7 +149,6 @@ class CustomerServiceTest {
                 1994
         );
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.of(customer));
-        when(customerRepository.existsCustomerByEmail(email)).thenReturn(true);
         when(customerRepository.updateCustomer(update)).thenReturn(id);
 
         // when
@@ -207,7 +206,6 @@ class CustomerServiceTest {
                 1996
         );
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.of(customer));
-        when(customerRepository.existsCustomerByEmail(email)).thenReturn(true);
         when(customerRepository.updateCustomer(update)).thenReturn(id);
 
         // when
@@ -230,8 +228,6 @@ class CustomerServiceTest {
                 1996
         );
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.empty());
-        when(customerRepository.existsCustomerByEmail(email)).thenReturn(false);
-        when(customerRepository.updateCustomer(update)).thenReturn(id);
 
         // when / then
         assertThatThrownBy(() -> underTest.updateCustomer(update))
@@ -258,7 +254,6 @@ class CustomerServiceTest {
         );
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.of(customer));
         when(customerRepository.existsCustomerByEmail(email)).thenReturn(true);
-        when(customerRepository.updateCustomer(update)).thenReturn(id);
 
         // when / then
         assertThatThrownBy(() -> underTest.updateCustomer(update))
@@ -284,12 +279,10 @@ class CustomerServiceTest {
                 1994
         );
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.of(customer));
-        when(customerRepository.existsCustomerByEmail(email)).thenReturn(true);
-        when(customerRepository.updateCustomer(update)).thenReturn(id);
 
         // when / then
         assertThatThrownBy(() -> underTest.updateCustomer(update))
-                .isInstanceOf(CustomerUpdateWithoutChangeException.class);
+                .isInstanceOf(CustomerWithoutChangeException.class);
         verify(customerRepository, never()).updateCustomer(any());
     }
 
