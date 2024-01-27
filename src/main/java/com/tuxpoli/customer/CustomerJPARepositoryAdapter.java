@@ -17,37 +17,37 @@ public class CustomerJPARepositoryAdapter implements CustomerRepository {
 
     @Override
     public boolean existsCustomerByEmail(String email) {
-        return this.customerJPARepository.existsCustomerByEmail(email);
+        return customerJPARepository.existsCustomerByEmail(email);
     }
 
     @Override
     public boolean existsCustomerById(Long id) {
-        return this.customerJPARepository.existsCustomerById(id);
+        return customerJPARepository.existsCustomerById(id);
     }
 
     @Override
     public Long createCustomer(Customer customer) {
-        return this.customerJPARepository.save(customer).getId();
+        return customerJPARepository.save(customer).getId();
     }
 
     @Override
     public List<Customer> getAllCustomers() {
-        return this.customerJPARepository.findAll();
+        return customerJPARepository.findAll();
     }
 
     @Override
     public Optional<Customer> getCustomerById(Long id) {
-        return this.customerJPARepository.findById(id);
+        return customerJPARepository.findById(id);
     }
 
     @Override
     public Long updateCustomer(Customer customer) {
-        return this.customerJPARepository.save(customer).getId();
+        return customerJPARepository.save(customer).getId();
     }
 
     @Override
     public Long deleteCustomer(Long id) {
-        this.customerJPARepository.deleteById(id);
+        customerJPARepository.deleteById(id);
         return id;
     }
 }

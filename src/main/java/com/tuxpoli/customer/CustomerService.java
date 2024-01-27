@@ -1,86 +1,111 @@
 package com.tuxpoli.customer;
 
+import com.tuxpoli.exception.DuplicateException;
+import com.tuxpoli.exception.NotFoundException;
+import com.tuxpoli.exception.WithoutChangeException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
 
-    public CustomerService(@Qualifier("jpa") CustomerRepository customerRepository) {
+    private final CustomerToCustomerResponseMapper customerToCustomerResponseMapper;
+
+    private final CustomerCreateRequestToCustomerMapper customerCreateRequestToCustomerMapper;
+
+    public CustomerService(
+            @Qualifier("jpa") CustomerRepository customerRepository,
+            CustomerToCustomerResponseMapper customerToCustomerResponseMapper,
+            CustomerCreateRequestToCustomerMapper customerCreateRequestToCustomerMapper
+    ) {
         this.customerRepository = customerRepository;
+        this.customerToCustomerResponseMapper = customerToCustomerResponseMapper;
+        this.customerCreateRequestToCustomerMapper = customerCreateRequestToCustomerMapper;
     }
 
-    public List<Customer> getAllCustomers() {
-        return this.customerRepository.getAllCustomers();
+    public List<CustomerResponse> getAllCustomers() {
+        return customerRepository.getAllCustomers()
+                .stream()
+                .map(customerToCustomerResponseMapper)
+                .collect(Collectors.toList());
     }
 
-    public Customer getCustomer(Long id) {
-        return this.customerRepository.getCustomerById(id).orElseThrow(
-                () -> new CustomerNotFoundException(
-                        "the user with id [ %s ] does not exists yet".formatted(id)
-                )
-        );
+    public CustomerResponse getCustomer(Long id) {
+        return customerRepository.getCustomerById(id)
+                .map(customerToCustomerResponseMapper)
+                .orElseThrow(
+                        () -> new NotFoundException(
+                                "the user with id [ %s ] does not exists yet".formatted(id)
+                        )
+                );
     }
 
-    public Long createCustomer(Customer customer) {
-        if (this.customerRepository.existsCustomerByEmail(customer.getEmail())) {
-            throw new CustomerDuplicateException(
-                    "the email [ %s ] is not available".formatted(customer.getEmail())
+    public IdResponse createCustomer(CustomerCreateRequest customer) {
+        if (customerRepository.existsCustomerByEmail(customer.email())) {
+            throw new DuplicateException(
+                    "the email [ %s ] is not available".formatted(customer.email())
             );
         }
-        return this.customerRepository.createCustomer(customer);
+        return new IdResponse(customerRepository.createCustomer(
+                customerCreateRequestToCustomerMapper.apply(customer)
+        ));
     }
 
-    public Long updateCustomer(Customer update) {
-        Customer customer = getCustomer(update.getId());
+    public IdResponse updateCustomer(Long id, CustomerUpdateRequest update) {
+        Customer customer = customerRepository.getCustomerById(id)
+                .orElseThrow(
+                        () -> new NotFoundException(
+                                "the user with id [ %s ] does not exist yet".formatted(id)
+                        )
+                );
         boolean modified = false;
         if (
-                update.getName() != null &&
-                !update.getName().equals(customer.getName())
+                update.name() != null &&
+                !update.name().equals(customer.getName())
         ) {
-            customer.setName(update.getName());
+            customer.setName(update.name());
             modified = true;
         }
         if (
-                update.getEmail() != null &&
-                !update.getEmail().equals(customer.getEmail())
+                update.email() != null &&
+                !update.email().equals(customer.getEmail())
         ) {
-            if (this.customerRepository.existsCustomerByEmail(update.getEmail())) {
-                throw new CustomerDuplicateException(
-                        "the email [ %s ] is not available".formatted(update.getEmail())
+            if (customerRepository.existsCustomerByEmail(update.email())) {
+                throw new DuplicateException(
+                        "the email [ %s ] is not available".formatted(update.email())
                 );
             }
-            customer.setEmail(update.getEmail());
+            customer.setEmail(update.email());
             modified = true;
         }
         if (
-                update.getYearOfBirth() != null &&
-                !update.getYearOfBirth().equals(customer.getYearOfBirth())
+                update.yearOfBirth() != null &&
+                !update.yearOfBirth().equals(customer.getYearOfBirth())
         ) {
-            customer.setYearOfBirth(update.getYearOfBirth());
+            customer.setYearOfBirth(update.yearOfBirth());
             modified = true;
         }
         if (!modified) {
-            throw new CustomerWithoutChangeException(
+            throw new WithoutChangeException(
                     "update without change attempted"
             );
         }
-        this.customerRepository.updateCustomer(customer);
-        return update.getId();
+        customerRepository.updateCustomer(customer);
+        return new IdResponse(id);
     }
 
-    public Long deleteCustomer(Long id) {
-        if (!this.customerRepository.existsCustomerById(id)) {
-            throw new CustomerNotFoundException(
+    public IdResponse deleteCustomer(Long id) {
+        if (!customerRepository.existsCustomerById(id)) {
+            throw new NotFoundException(
                     "the user with id [ %s ] does not exists yet".formatted(id)
             );
         }
-        this.customerRepository.deleteCustomer(id);
-        return id;
+        customerRepository.deleteCustomer(id);
+        return new IdResponse(id);
     }
 }

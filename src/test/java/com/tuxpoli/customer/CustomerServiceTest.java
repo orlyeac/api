@@ -1,8 +1,12 @@
 package com.tuxpoli.customer;
 
+import com.tuxpoli.exception.DuplicateException;
+import com.tuxpoli.exception.NotFoundException;
+import com.tuxpoli.exception.WithoutChangeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -19,9 +23,19 @@ class CustomerServiceTest {
 
     @Mock private CustomerRepository customerRepository;
 
+    private CustomerCreateRequestToCustomerMapper customerCreateRequestToCustomerMapper;
+
+    private CustomerToCustomerResponseMapper customerToCustomerResponseMapper;
+
     @BeforeEach
     void setUp() {
-        underTest = new CustomerService(customerRepository);
+        customerCreateRequestToCustomerMapper = new CustomerCreateRequestToCustomerMapper();
+        customerToCustomerResponseMapper = new CustomerToCustomerResponseMapper();
+        underTest = new CustomerService(
+                customerRepository,
+                customerToCustomerResponseMapper,
+                customerCreateRequestToCustomerMapper
+        );
     }
 
     @Test
@@ -46,11 +60,11 @@ class CustomerServiceTest {
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.of(customer));
 
         // when
-        Customer actual = underTest.getCustomer(id);
+        CustomerResponse actual = underTest.getCustomer(id);
 
         // then
         verify(customerRepository).getCustomerById(id);
-        assertThat(actual).isEqualTo(customer);
+        assertThat(actual).isEqualTo(customerToCustomerResponseMapper.apply(customer));
     }
 
     @Test
@@ -61,7 +75,7 @@ class CustomerServiceTest {
 
         // when / then
         assertThatThrownBy(() -> underTest.getCustomer(id))
-                .isInstanceOf(CustomerNotFoundException.class);
+                .isInstanceOf(NotFoundException.class);
     }
 
     @Test
@@ -69,20 +83,29 @@ class CustomerServiceTest {
         // given
         String email = "johndoe@email.com";
         when(customerRepository.existsCustomerByEmail(email)).thenReturn(false);
-        Customer customer = new Customer(
+        CustomerCreateRequest customer = new CustomerCreateRequest(
                 "John Doe",
                 email,
                 1994
         );
         Long id = 1L;
-        when(customerRepository.createCustomer(customer)).thenReturn(id);
+        when(
+                customerRepository.createCustomer(
+                        customerCreateRequestToCustomerMapper.apply(customer)
+                )
+        ).thenReturn(id);
 
         // when
-        Long actual = underTest.createCustomer(customer);
+        IdResponse actual = underTest.createCustomer(customer);
 
         // then
-        verify(customerRepository).createCustomer(customer);
-        assertThat(actual).isEqualTo(id);
+        ArgumentCaptor<Customer> argumentCaptor = ArgumentCaptor.forClass(Customer.class);
+        verify(customerRepository).createCustomer(argumentCaptor.capture());
+        Customer insertNew = argumentCaptor.getValue();
+        assertThat(insertNew.getName()).isEqualTo(customer.name());
+        assertThat(insertNew.getEmail()).isEqualTo(customer.email());
+        assertThat(insertNew.getYearOfBirth()).isEqualTo(customer.yearOfBirth());
+        assertThat(actual).isEqualTo(new IdResponse(id));
     }
 
     @Test
@@ -90,7 +113,7 @@ class CustomerServiceTest {
         // given
         String email = "johndoe@email.com";
         when(customerRepository.existsCustomerByEmail(email)).thenReturn(true);
-        Customer customer = new Customer(
+        CustomerCreateRequest customer = new CustomerCreateRequest(
                 "John Doe",
                 email,
                 1994
@@ -98,7 +121,7 @@ class CustomerServiceTest {
 
         // when / then
         assertThatThrownBy(() -> underTest.createCustomer(customer))
-                .isInstanceOf(CustomerDuplicateException.class);
+                .isInstanceOf(DuplicateException.class);
         verify(customerRepository, never()).createCustomer(any());
     }
 
@@ -113,22 +136,32 @@ class CustomerServiceTest {
                 1994
         );
         String email = "johnnydoe@email.com";
-        Customer update = new Customer(
-                id,
+        CustomerUpdateRequest update = new CustomerUpdateRequest(
                 "Johnny Doe",
                 email,
                 1996
         );
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.of(customer));
         when(customerRepository.existsCustomerByEmail(email)).thenReturn(false);
-        when(customerRepository.updateCustomer(update)).thenReturn(id);
+        when(customerRepository.updateCustomer(new Customer(
+                id,
+                update.name(),
+                update.email(),
+                update.yearOfBirth()
+        ))).thenReturn(id);
 
         // when
-        Long actual = underTest.updateCustomer(update);
+        IdResponse actual = underTest.updateCustomer(id, update);
 
         // then
-        verify(customerRepository).updateCustomer(update);
-        assertThat(actual).isEqualTo(id);
+        ArgumentCaptor<Customer> argumentCaptor = ArgumentCaptor.forClass(Customer.class);
+        verify(customerRepository).updateCustomer(argumentCaptor.capture());
+        Customer updatingItem = argumentCaptor.getValue();
+        assertThat(updatingItem.getId()).isEqualTo(id);
+        assertThat(updatingItem.getName()).isEqualTo(update.name());
+        assertThat(updatingItem.getEmail()).isEqualTo(update.email());
+        assertThat(updatingItem.getYearOfBirth()).isEqualTo(update.yearOfBirth());
+        assertThat(actual).isEqualTo(new IdResponse(id));
     }
 
     @Test
@@ -141,22 +174,31 @@ class CustomerServiceTest {
                 "johndoe@email.com",
                 1994
         );
-        String email = "johndoe@email.com";
-        Customer update = new Customer(
-                id,
+        CustomerUpdateRequest update = new CustomerUpdateRequest(
                 "Johnny Doe",
-                email,
+                null,
                 1994
         );
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.of(customer));
-        when(customerRepository.updateCustomer(update)).thenReturn(id);
+        when(customerRepository.updateCustomer(new Customer(
+                id,
+                update.name(),
+                customer.getEmail(),
+                customer.getYearOfBirth()
+        ))).thenReturn(id);
 
         // when
-        Long actual = underTest.updateCustomer(update);
+        IdResponse actual = underTest.updateCustomer(id, update);
 
         // then
-        verify(customerRepository).updateCustomer(update);
-        assertThat(actual).isEqualTo(id);
+        ArgumentCaptor<Customer> argumentCaptor = ArgumentCaptor.forClass(Customer.class);
+        verify(customerRepository).updateCustomer(argumentCaptor.capture());
+        Customer updatingItem = argumentCaptor.getValue();
+        assertThat(updatingItem.getId()).isEqualTo(id);
+        assertThat(updatingItem.getName()).isEqualTo(update.name());
+        assertThat(updatingItem.getEmail()).isEqualTo(customer.getEmail());
+        assertThat(updatingItem.getYearOfBirth()).isEqualTo(customer.getYearOfBirth());
+        assertThat(actual).isEqualTo(new IdResponse(id));
     }
 
     @Test
@@ -170,22 +212,32 @@ class CustomerServiceTest {
                 1994
         );
         String email = "johnnydoe@email.com";
-        Customer update = new Customer(
-                id,
+        CustomerUpdateRequest update = new CustomerUpdateRequest(
                 "John Doe",
                 email,
-                1994
+                null
         );
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.of(customer));
         when(customerRepository.existsCustomerByEmail(email)).thenReturn(false);
-        when(customerRepository.updateCustomer(update)).thenReturn(id);
+        when(customerRepository.updateCustomer(new Customer(
+                id,
+                customer.getName(),
+                update.email(),
+                customer.getYearOfBirth()
+        ))).thenReturn(id);
 
         // when
-        Long actual = underTest.updateCustomer(update);
+        IdResponse actual = underTest.updateCustomer(id, update);
 
         // then
-        verify(customerRepository).updateCustomer(update);
-        assertThat(actual).isEqualTo(id);
+        ArgumentCaptor<Customer> argumentCaptor = ArgumentCaptor.forClass(Customer.class);
+        verify(customerRepository).updateCustomer(argumentCaptor.capture());
+        Customer updatingItem = argumentCaptor.getValue();
+        assertThat(updatingItem.getId()).isEqualTo(id);
+        assertThat(updatingItem.getName()).isEqualTo(customer.getName());
+        assertThat(updatingItem.getEmail()).isEqualTo(update.email());
+        assertThat(updatingItem.getYearOfBirth()).isEqualTo(customer.getYearOfBirth());
+        assertThat(actual).isEqualTo(new IdResponse(id));
     }
 
     @Test
@@ -198,22 +250,31 @@ class CustomerServiceTest {
                 "johndoe@email.com",
                 1994
         );
-        String email = "johndoe@email.com";
-        Customer update = new Customer(
-                id,
-                "John Doe",
-                email,
+        CustomerUpdateRequest update = new CustomerUpdateRequest(
+                null,
+                "johndoe@email.com",
                 1996
         );
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.of(customer));
-        when(customerRepository.updateCustomer(update)).thenReturn(id);
+        when(customerRepository.updateCustomer(new Customer(
+                id,
+                customer.getName(),
+                customer.getEmail(),
+                update.yearOfBirth()
+        ))).thenReturn(id);
 
         // when
-        Long actual = underTest.updateCustomer(update);
+        IdResponse actual = underTest.updateCustomer(id, update);
 
         // then
-        verify(customerRepository).updateCustomer(update);
-        assertThat(actual).isEqualTo(id);
+        ArgumentCaptor<Customer> argumentCaptor = ArgumentCaptor.forClass(Customer.class);
+        verify(customerRepository).updateCustomer(argumentCaptor.capture());
+        Customer updatingItem = argumentCaptor.getValue();
+        assertThat(updatingItem.getId()).isEqualTo(id);
+        assertThat(updatingItem.getName()).isEqualTo(customer.getName());
+        assertThat(updatingItem.getEmail()).isEqualTo(customer.getEmail());
+        assertThat(updatingItem.getYearOfBirth()).isEqualTo(update.yearOfBirth());
+        assertThat(actual).isEqualTo(new IdResponse(id));
     }
 
     @Test
@@ -221,8 +282,7 @@ class CustomerServiceTest {
         // given
         Long id = 1L;
         String email = "johnnydoe@email.com";
-        Customer update = new Customer(
-                id,
+        CustomerUpdateRequest update = new CustomerUpdateRequest(
                 "Johnny Doe",
                 email,
                 1996
@@ -230,8 +290,8 @@ class CustomerServiceTest {
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.empty());
 
         // when / then
-        assertThatThrownBy(() -> underTest.updateCustomer(update))
-                .isInstanceOf(CustomerNotFoundException.class);
+        assertThatThrownBy(() -> underTest.updateCustomer(id, update))
+                .isInstanceOf(NotFoundException.class);
         verify(customerRepository, never()).updateCustomer(any());
     }
 
@@ -246,8 +306,7 @@ class CustomerServiceTest {
                 1994
         );
         String email = "johnnydoe@email.com";
-        Customer update = new Customer(
-                id,
+        CustomerUpdateRequest update = new CustomerUpdateRequest(
                 "John Doe",
                 email,
                 1994
@@ -256,8 +315,8 @@ class CustomerServiceTest {
         when(customerRepository.existsCustomerByEmail(email)).thenReturn(true);
 
         // when / then
-        assertThatThrownBy(() -> underTest.updateCustomer(update))
-                .isInstanceOf(CustomerDuplicateException.class);
+        assertThatThrownBy(() -> underTest.updateCustomer(id, update))
+                .isInstanceOf(DuplicateException.class);
         verify(customerRepository, never()).updateCustomer(any());
     }
 
@@ -272,8 +331,7 @@ class CustomerServiceTest {
                 1994
         );
         String email = "johndoe@email.com";
-        Customer update = new Customer(
-                id,
+        CustomerUpdateRequest update = new CustomerUpdateRequest(
                 "John Doe",
                 email,
                 1994
@@ -281,8 +339,8 @@ class CustomerServiceTest {
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.of(customer));
 
         // when / then
-        assertThatThrownBy(() -> underTest.updateCustomer(update))
-                .isInstanceOf(CustomerWithoutChangeException.class);
+        assertThatThrownBy(() -> underTest.updateCustomer(id, update))
+                .isInstanceOf(WithoutChangeException.class);
         verify(customerRepository, never()).updateCustomer(any());
     }
 
@@ -293,11 +351,11 @@ class CustomerServiceTest {
         when(customerRepository.existsCustomerById(id)).thenReturn(true);
 
         // when
-        Long actual = underTest.deleteCustomer(id);
+        IdResponse actual = underTest.deleteCustomer(id);
 
         // then
         verify(customerRepository).deleteCustomer(id);
-        assertThat(actual).isEqualTo(id);
+        assertThat(actual).isEqualTo(new IdResponse(id));
     }
 
     @Test
@@ -308,7 +366,7 @@ class CustomerServiceTest {
 
         // when / then
         assertThatThrownBy(() -> underTest.deleteCustomer(id))
-                .isInstanceOf(CustomerNotFoundException.class);
+                .isInstanceOf(NotFoundException.class);
         verify(customerRepository, never()).deleteCustomer(any());
     }
 }
