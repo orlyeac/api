@@ -1,5 +1,6 @@
 package com.tuxpoli.customer;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class CustomerJPARepositoryAdapter implements CustomerRepository {
 
     @Override
     public List<Customer> getAllCustomers() {
-        return customerJPARepository.findAll();
+        return customerJPARepository.findAll(Sort.by("id"));
     }
 
     @Override
