@@ -14,7 +14,6 @@ public class CustomerJPARepositoryAdapter implements CustomerRepository {
         this.customerJPARepository = customerJPARepository;
     }
 
-
     @Override
     public boolean existsCustomerByEmail(String email) {
         return customerJPARepository.existsCustomerByEmail(email);
@@ -38,6 +37,11 @@ public class CustomerJPARepositoryAdapter implements CustomerRepository {
     @Override
     public Optional<Customer> getCustomerById(Long id) {
         return customerJPARepository.findById(id);
+    }
+
+    @Override
+    public Optional<Customer> getCustomerByEmail(String email) {
+        return customerJPARepository.findCustomerByEmail(email);
     }
 
     @Override

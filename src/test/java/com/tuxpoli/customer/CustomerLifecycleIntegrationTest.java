@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
@@ -30,11 +32,12 @@ public class CustomerLifecycleIntegrationTest extends TestcontainersConfig {
         CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
                 name,
                 email,
+                "password",
                 yearOfBirth
         );
 
         // when
-        IdResponse idResponse = webTestClient.post()
+        EntityExchangeResult<IdResponse> entityExchangeResult = webTestClient.post()
                 .uri("api/v1/customers")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -44,12 +47,14 @@ public class CustomerLifecycleIntegrationTest extends TestcontainersConfig {
                 .isOk()
                 .expectBody(new ParameterizedTypeReference<IdResponse>() {
                 })
-                .returnResult()
-                .getResponseBody();
+                .returnResult();
+        IdResponse idResponse = entityExchangeResult.getResponseBody();
+        String token = entityExchangeResult.getResponseHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
         List<CustomerResponse> customerResponses = webTestClient.get()
                 .uri("api/v1/customers")
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer %s".formatted(token))
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -61,6 +66,7 @@ public class CustomerLifecycleIntegrationTest extends TestcontainersConfig {
         CustomerResponse customerResponse = webTestClient.get()
                 .uri("api/v1/customers/%s".formatted(idResponse.id()))
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer %s".formatted(token))
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -92,7 +98,8 @@ public class CustomerLifecycleIntegrationTest extends TestcontainersConfig {
         // given
         CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
                 "John Doe",
-                "johndoe@email.com",
+                "johnnydoe@email.com",
+                "password",
                 1994
         );
         String name = "Johnny Doe";
@@ -105,7 +112,7 @@ public class CustomerLifecycleIntegrationTest extends TestcontainersConfig {
         );
 
         // when
-        IdResponse idResponse = webTestClient.post()
+        EntityExchangeResult<IdResponse> entityExchangeResult = webTestClient.post()
                 .uri("api/v1/customers")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -115,13 +122,15 @@ public class CustomerLifecycleIntegrationTest extends TestcontainersConfig {
                 .isOk()
                 .expectBody(new ParameterizedTypeReference<IdResponse>() {
                 })
-                .returnResult()
-                .getResponseBody();
+                .returnResult();
+        IdResponse idResponse = entityExchangeResult.getResponseBody();
+        String token = entityExchangeResult.getResponseHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
         webTestClient.put()
                 .uri("api/v1/customers/%s".formatted(idResponse.id()))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer %s".formatted(token))
                 .body(Mono.just(customerUpdateRequest), CustomerUpdateRequest.class)
                 .exchange()
                 .expectStatus()
@@ -130,6 +139,7 @@ public class CustomerLifecycleIntegrationTest extends TestcontainersConfig {
         CustomerResponse customerResponse = webTestClient.get()
                 .uri("api/v1/customers/%s".formatted(idResponse.id()))
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer %s".formatted(token))
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -152,17 +162,39 @@ public class CustomerLifecycleIntegrationTest extends TestcontainersConfig {
     void canDeleteCustomer() {
         // given
         CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
+                "Jane Doe",
+                "janedoe@email.com",
+                "password",
+                1994
+        );
+
+        CustomerCreateRequest customerCreateRequestToDelete = new CustomerCreateRequest(
                 "John Doe",
                 "johndoe@email.com",
+                "password",
                 1994
         );
 
         // when
-        IdResponse idResponse = webTestClient.post()
+        String token = webTestClient.post()
                 .uri("api/v1/customers")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(customerCreateRequest), CustomerUpdateRequest.class)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(new ParameterizedTypeReference<IdResponse>() {
+                })
+                .returnResult()
+                .getResponseHeaders()
+                .getFirst(HttpHeaders.AUTHORIZATION);
+
+        IdResponse idResponse = webTestClient.post()
+                .uri("api/v1/customers")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(customerCreateRequestToDelete), CustomerUpdateRequest.class)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -174,6 +206,7 @@ public class CustomerLifecycleIntegrationTest extends TestcontainersConfig {
         webTestClient.delete()
                 .uri("api/v1/customers/%s".formatted(idResponse.id()))
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer %s".formatted(token))
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -182,6 +215,7 @@ public class CustomerLifecycleIntegrationTest extends TestcontainersConfig {
         webTestClient.get()
                 .uri("api/v1/customers/%s".formatted(idResponse.id()))
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer %s".formatted(token))
                 .exchange()
                 .expectStatus()
                 .isNotFound();

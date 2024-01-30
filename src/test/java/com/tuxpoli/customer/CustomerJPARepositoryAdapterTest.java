@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -60,6 +62,7 @@ class CustomerJPARepositoryAdapterTest {
         Customer customer = new Customer(
                 "John Doe",
                 "johndoe@email.com",
+                "hashedpassword",
                 1994
         );
         when(customerJPARepository.save(customer)).thenReturn(
@@ -67,6 +70,7 @@ class CustomerJPARepositoryAdapterTest {
                         id,
                         customer.getName(),
                         customer.getEmail(),
+                        customer.getPassword(),
                         customer.getYearOfBirth()
                 )
         );
@@ -101,12 +105,25 @@ class CustomerJPARepositoryAdapterTest {
     }
 
     @Test
+    void getCustomerByEmail() {
+        // given
+        String email = "johndoe@email.com";
+
+        // when
+        underTest.getCustomerByEmail(email);
+
+        // then
+        verify(customerJPARepository).findCustomerByEmail(email);
+    }
+
+    @Test
     void updateCustomer() {
         // given
         Customer customer = new Customer(
                 1L,
                 "John Doe",
                 "johndoe@email.com",
+                "hashedpassword",
                 1994
         );
         when(customerJPARepository.save(customer)).thenReturn(customer);

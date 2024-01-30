@@ -15,6 +15,8 @@ public interface CustomerRepository {
 
     Optional<Customer> getCustomerById(Long id);
 
+    Optional<Customer> getCustomerByEmail(String email);
+
     Long updateCustomer(Customer customer);
 
     Long deleteCustomer(Long id);

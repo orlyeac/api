@@ -1,5 +1,7 @@
 package com.tuxpoli.customer;
 
+import com.tuxpoli.jwt.JWTUtility;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,9 +12,11 @@ import java.util.List;
 public class CustomerController {
 
     private CustomerService customerService;
+    private JWTUtility jwtUtility;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, JWTUtility jwtUtility) {
         this.customerService = customerService;
+        this.jwtUtility = jwtUtility;
     }
 
     @GetMapping
@@ -26,8 +30,13 @@ public class CustomerController {
     }
 
     @PostMapping
-    public IdResponse createCustomer(@RequestBody CustomerCreateRequest customer) {
-        return customerService.createCustomer(customer);
+    public ResponseEntity<?> createCustomer(@RequestBody CustomerCreateRequest customer) {
+        return ResponseEntity.ok()
+                .header(
+                        HttpHeaders.AUTHORIZATION,
+                        jwtUtility.issueToken(customer.email(), "ROLE_USER")
+                )
+                .body(customerService.createCustomer(customer));
     }
 
     @PutMapping(path = "{id}")

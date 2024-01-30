@@ -9,11 +9,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,13 +24,17 @@ class CustomerServiceTest {
 
     @Mock private CustomerRepository customerRepository;
 
+    @Mock private PasswordEncoder passwordEncoder;
+
     private CustomerCreateRequestToCustomerMapper customerCreateRequestToCustomerMapper;
 
     private CustomerToCustomerResponseMapper customerToCustomerResponseMapper;
 
     @BeforeEach
     void setUp() {
-        customerCreateRequestToCustomerMapper = new CustomerCreateRequestToCustomerMapper();
+        customerCreateRequestToCustomerMapper = new CustomerCreateRequestToCustomerMapper(
+                passwordEncoder
+        );
         customerToCustomerResponseMapper = new CustomerToCustomerResponseMapper();
         underTest = new CustomerService(
                 customerRepository,
@@ -55,6 +60,7 @@ class CustomerServiceTest {
                 id,
                 "John Doe",
                 "johndoe@mail.com",
+                "hashedpassword",
                 1994
         );
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.of(customer));
@@ -86,9 +92,13 @@ class CustomerServiceTest {
         CustomerCreateRequest customer = new CustomerCreateRequest(
                 "John Doe",
                 email,
+                "password",
                 1994
         );
         Long id = 1L;
+        when(passwordEncoder.encode(customer.password())).thenReturn(
+                "hashed%s".formatted(customer.password())
+        );
         when(
                 customerRepository.createCustomer(
                         customerCreateRequestToCustomerMapper.apply(customer)
@@ -104,6 +114,7 @@ class CustomerServiceTest {
         Customer insertNew = argumentCaptor.getValue();
         assertThat(insertNew.getName()).isEqualTo(customer.name());
         assertThat(insertNew.getEmail()).isEqualTo(customer.email());
+        assertThat(insertNew.getPassword()).isEqualTo(passwordEncoder.encode(customer.password()));
         assertThat(insertNew.getYearOfBirth()).isEqualTo(customer.yearOfBirth());
         assertThat(actual).isEqualTo(new IdResponse(id));
     }
@@ -116,6 +127,7 @@ class CustomerServiceTest {
         CustomerCreateRequest customer = new CustomerCreateRequest(
                 "John Doe",
                 email,
+                "password",
                 1994
         );
 
@@ -133,6 +145,7 @@ class CustomerServiceTest {
                 id,
                 "John Doe",
                 "johndoe@email.com",
+                "hashedpassword",
                 1994
         );
         String email = "johnnydoe@email.com";
@@ -147,6 +160,7 @@ class CustomerServiceTest {
                 id,
                 update.name(),
                 update.email(),
+                customer.getPassword(),
                 update.yearOfBirth()
         ))).thenReturn(id);
 
@@ -172,6 +186,7 @@ class CustomerServiceTest {
                 id,
                 "John Doe",
                 "johndoe@email.com",
+                "hashedpassword",
                 1994
         );
         CustomerUpdateRequest update = new CustomerUpdateRequest(
@@ -184,6 +199,7 @@ class CustomerServiceTest {
                 id,
                 update.name(),
                 customer.getEmail(),
+                customer.getPassword(),
                 customer.getYearOfBirth()
         ))).thenReturn(id);
 
@@ -209,6 +225,7 @@ class CustomerServiceTest {
                 id,
                 "John Doe",
                 "johndoe@email.com",
+                "hashedpassword",
                 1994
         );
         String email = "johnnydoe@email.com";
@@ -223,6 +240,7 @@ class CustomerServiceTest {
                 id,
                 customer.getName(),
                 update.email(),
+                customer.getPassword(),
                 customer.getYearOfBirth()
         ))).thenReturn(id);
 
@@ -248,6 +266,7 @@ class CustomerServiceTest {
                 id,
                 "John Doe",
                 "johndoe@email.com",
+                "hashedpassword",
                 1994
         );
         CustomerUpdateRequest update = new CustomerUpdateRequest(
@@ -260,6 +279,7 @@ class CustomerServiceTest {
                 id,
                 customer.getName(),
                 customer.getEmail(),
+                customer.getPassword(),
                 update.yearOfBirth()
         ))).thenReturn(id);
 
@@ -303,6 +323,7 @@ class CustomerServiceTest {
                 id,
                 "John Doe",
                 "johndoe@email.com",
+                "hashedpassword",
                 1994
         );
         String email = "johnnydoe@email.com";
@@ -328,6 +349,7 @@ class CustomerServiceTest {
                 id,
                 "John Doe",
                 "johndoe@email.com",
+                "hashedpassword",
                 1994
         );
         String email = "johndoe@email.com";
