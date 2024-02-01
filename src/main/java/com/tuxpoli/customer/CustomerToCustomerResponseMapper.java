@@ -1,8 +1,10 @@
 package com.tuxpoli.customer;
 
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class CustomerToCustomerResponseMapper implements Function<Customer, CustomerResponse> {
@@ -12,7 +14,11 @@ public class CustomerToCustomerResponseMapper implements Function<Customer, Cust
                 customer.getId(),
                 customer.getName(),
                 customer.getEmail(),
-                customer.getYearOfBirth()
+                customer.getYearOfBirth(),
+                customer.getAuthorities()
+                        .stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList())
         );
     }
 }

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Sort;
 
 import java.util.Optional;
 
@@ -89,7 +90,7 @@ class CustomerJPARepositoryAdapterTest {
         underTest.getAllCustomers();
 
         // then
-        verify(customerJPARepository).findAll();
+        verify(customerJPARepository).findAll(Sort.by("id"));
     }
 
     @Test

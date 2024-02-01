@@ -7,8 +7,6 @@ import java.util.Optional;
 
 public interface CustomerJPARepository extends JpaRepository<Customer, Long> {
 
-    // List<Customer> findAllCustomerOrderById();
-
     boolean existsCustomerByEmail(String email);
 
     boolean existsCustomerById(Long id);

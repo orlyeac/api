@@ -1,6 +1,8 @@
 package com.tuxpoli.customer;
 
 import com.tuxpoli.TestcontainersConfig;
+import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -8,17 +10,62 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class CustomerLifecycleIntegrationTest extends TestcontainersConfig {
+public class CustomerLifecycleIntegrationTest {
+
+    @BeforeAll
+    static void beforeAll() {
+        Flyway flyway = Flyway
+                .configure()
+                .dataSource(
+                        postgreSQLContainer.getJdbcUrl(),
+                        postgreSQLContainer.getUsername(),
+                        postgreSQLContainer.getPassword()
+                )
+                .load();
+        flyway.migrate();
+    }
+
+    @Container
+    protected static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(
+            "postgres:latest"
+    )
+            .withDatabaseName("tuxpoli-customer-unit-test")
+            .withUsername("tuxpoli")
+            .withPassword("tuxpoli");
+
+    @DynamicPropertySource
+    private static void dynamicallyAddDataSourceProperties(
+            DynamicPropertyRegistry dynamicPropertyRegistry
+    ) {
+        dynamicPropertyRegistry.add(
+                "spring.datasource.url",
+                postgreSQLContainer::getJdbcUrl
+        );
+        dynamicPropertyRegistry.add(
+                "spring.datasource.username",
+                postgreSQLContainer::getUsername
+        );
+        dynamicPropertyRegistry.add(
+                "spring.datasource.password",
+                postgreSQLContainer::getPassword
+        );
+    }
 
     @Autowired
     private WebTestClient webTestClient;
@@ -26,9 +73,9 @@ public class CustomerLifecycleIntegrationTest extends TestcontainersConfig {
     @Test
     void canCreateCustomer() {
         // given
-        String name = "John Doe";
-        String email = "johndoe@email.com";
-        Integer yearOfBirth = 1994;
+        String name = "Peter Smith";
+        String email = "petersmith@email.com";
+        Integer yearOfBirth = 1996;
         CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
                 name,
                 email,
@@ -41,7 +88,7 @@ public class CustomerLifecycleIntegrationTest extends TestcontainersConfig {
                 .uri("api/v1/customers")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(customerCreateRequest), CustomerUpdateRequest.class)
+                .body(Mono.just(customerCreateRequest), CustomerCreateRequest.class)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -81,7 +128,8 @@ public class CustomerLifecycleIntegrationTest extends TestcontainersConfig {
                         idResponse.id(),
                         name,
                         email,
-                        yearOfBirth
+                        yearOfBirth,
+                        List.of("ROLE_USER")
                 ));
 
         assertThat(customerResponse)
@@ -89,7 +137,8 @@ public class CustomerLifecycleIntegrationTest extends TestcontainersConfig {
                         idResponse.id(),
                         name,
                         email,
-                        yearOfBirth
+                        yearOfBirth,
+                        List.of("ROLE_USER")
                 ));
     }
 
@@ -116,7 +165,7 @@ public class CustomerLifecycleIntegrationTest extends TestcontainersConfig {
                 .uri("api/v1/customers")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(customerCreateRequest), CustomerUpdateRequest.class)
+                .body(Mono.just(customerCreateRequest), CustomerCreateRequest.class)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -154,7 +203,8 @@ public class CustomerLifecycleIntegrationTest extends TestcontainersConfig {
                         idResponse.id(),
                         name,
                         email,
-                        yearOfBirth
+                        yearOfBirth,
+                        List.of("ROLE_USER")
                 ));
     }
 
@@ -176,46 +226,49 @@ public class CustomerLifecycleIntegrationTest extends TestcontainersConfig {
         );
 
         // when
-        String token = webTestClient.post()
+        EntityExchangeResult<IdResponse> entityExchangeResultDelete = webTestClient.post()
                 .uri("api/v1/customers")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(customerCreateRequest), CustomerUpdateRequest.class)
+                .body(Mono.just(customerCreateRequest), CustomerCreateRequest.class)
                 .exchange()
                 .expectStatus()
                 .isOk()
                 .expectBody(new ParameterizedTypeReference<IdResponse>() {
                 })
-                .returnResult()
-                .getResponseHeaders()
+                .returnResult();
+        IdResponse idResponseDelete = entityExchangeResultDelete.getResponseBody();
+        String tokenDelete = entityExchangeResultDelete.getResponseHeaders()
                 .getFirst(HttpHeaders.AUTHORIZATION);
 
-        IdResponse idResponse = webTestClient.post()
+        EntityExchangeResult<IdResponse> entityExchangeResultDeleted = webTestClient.post()
                 .uri("api/v1/customers")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(customerCreateRequestToDelete), CustomerUpdateRequest.class)
+                .body(Mono.just(customerCreateRequestToDelete), CustomerCreateRequest.class)
                 .exchange()
                 .expectStatus()
                 .isOk()
                 .expectBody(new ParameterizedTypeReference<IdResponse>() {
                 })
-                .returnResult()
-                .getResponseBody();
+                .returnResult();
+        IdResponse idResponseDeleted = entityExchangeResultDeleted.getResponseBody();
+        String tokenDeleted = entityExchangeResultDeleted.getResponseHeaders()
+                .getFirst(HttpHeaders.AUTHORIZATION);
 
         webTestClient.delete()
-                .uri("api/v1/customers/%s".formatted(idResponse.id()))
+                .uri("api/v1/customers/%s".formatted(idResponseDeleted.id()))
                 .accept(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer %s".formatted(token))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer %s".formatted(tokenDeleted))
                 .exchange()
                 .expectStatus()
                 .isOk();
 
         // then
         webTestClient.get()
-                .uri("api/v1/customers/%s".formatted(idResponse.id()))
+                .uri("api/v1/customers/%s".formatted(idResponseDeleted.id()))
                 .accept(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer %s".formatted(token))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer %s".formatted(tokenDelete))
                 .exchange()
                 .expectStatus()
                 .isNotFound();

@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -63,6 +64,19 @@ public class DefaultExceptionHandler {
                 HttpStatus.FORBIDDEN.value(),
                 LocalDateTime.now()
         ), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiException> handleException(
+            BadCredentialsException e,
+            HttpServletRequest request
+    ) {
+        return new ResponseEntity<>(new ApiException(
+                request.getRequestURI(),
+                e.getMessage(),
+                HttpStatus.UNAUTHORIZED.value(),
+                LocalDateTime.now()
+        ), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(Exception.class)
