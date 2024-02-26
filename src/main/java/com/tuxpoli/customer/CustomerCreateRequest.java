@@ -4,7 +4,8 @@ public record CustomerCreateRequest(
         String name,
         String email,
         String password,
-        Integer yearOfBirth
+        LabourLink labourLink,
+        String company
 ) {
 
 }

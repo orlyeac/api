@@ -50,28 +50,45 @@ public class Customer implements UserDetails {
     private String password;
 
     @Column(
-            name = "year_of_birth",
+            name = "labour_link",
             nullable = false
     )
-    private Integer yearOfBirth;
+    @Enumerated(EnumType.STRING)
+    private LabourLink labourLink;
+
+    @Column(
+            name = "company",
+            nullable = true
+    )
+    private String company;
+
+    @Column(
+            name = "authority",
+            nullable = false
+    )
+    private String authority;
 
     public Customer() {
 
     }
 
-    public Customer(Long id, String name, String email, String password, Integer yearOfBirth) {
+    public Customer(Long id, String name, String email, String password, LabourLink labourLink, String company) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
-        this.yearOfBirth = yearOfBirth;
+        this.labourLink = labourLink;
+        this.company = company;
+        this.authority = "ROLE_USER";
     }
 
-    public Customer(String name, String email, String password, Integer yearOfBirth) {
+    public Customer(String name, String email, String password, LabourLink labourLink, String company) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.yearOfBirth = yearOfBirth;
+        this.labourLink = labourLink;
+        this.company = company;
+        this.authority = "ROLE_USER";
     }
 
     public Long getId() {
@@ -98,12 +115,28 @@ public class Customer implements UserDetails {
         this.email = email;
     }
 
-    public Integer getYearOfBirth() {
-        return yearOfBirth;
+    public LabourLink getLabourLink() {
+        return labourLink;
     }
 
-    public void setYearOfBirth(Integer yearOfBirth) {
-        this.yearOfBirth = yearOfBirth;
+    public void setLabourLink(LabourLink labourLink) {
+        this.labourLink = labourLink;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
     }
 
     @Override
@@ -111,12 +144,12 @@ public class Customer implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return Objects.equals(id, customer.id) && Objects.equals(name, customer.name) && Objects.equals(email, customer.email) && Objects.equals(yearOfBirth, customer.yearOfBirth);
+        return Objects.equals(id, customer.id) && Objects.equals(name, customer.name) && Objects.equals(email, customer.email) && labourLink == customer.labourLink && Objects.equals(company, customer.company);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, yearOfBirth);
+        return Objects.hash(id, name, email, labourLink, company);
     }
 
     @Override
@@ -125,13 +158,15 @@ public class Customer implements UserDetails {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", age=" + yearOfBirth +
+                ", labourLink=" + labourLink +
+                ", company='" + company + '\'' +
+                ", authority='" + authority + '\'' +
                 '}';
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority(authority));
     }
 
     @Override

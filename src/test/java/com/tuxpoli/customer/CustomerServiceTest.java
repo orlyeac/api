@@ -61,7 +61,8 @@ class CustomerServiceTest {
                 "John Doe",
                 "johndoe@mail.com",
                 "hashedpassword",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.of(customer));
 
@@ -93,7 +94,8 @@ class CustomerServiceTest {
                 "John Doe",
                 email,
                 "password",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         Long id = 1L;
         when(passwordEncoder.encode(customer.password())).thenReturn(
@@ -115,7 +117,8 @@ class CustomerServiceTest {
         assertThat(insertNew.getName()).isEqualTo(customer.name());
         assertThat(insertNew.getEmail()).isEqualTo(customer.email());
         assertThat(insertNew.getPassword()).isEqualTo(passwordEncoder.encode(customer.password()));
-        assertThat(insertNew.getYearOfBirth()).isEqualTo(customer.yearOfBirth());
+        assertThat(insertNew.getLabourLink()).isEqualTo(customer.labourLink());
+        assertThat(insertNew.getCompany()).isEqualTo(customer.company());
         assertThat(actual).isEqualTo(new IdResponse(id));
     }
 
@@ -128,7 +131,8 @@ class CustomerServiceTest {
                 "John Doe",
                 email,
                 "password",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
 
         // when / then
@@ -146,13 +150,15 @@ class CustomerServiceTest {
                 "John Doe",
                 "johndoe@email.com",
                 "hashedpassword",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         String email = "johnnydoe@email.com";
         CustomerUpdateRequest update = new CustomerUpdateRequest(
                 "Johnny Doe",
                 email,
-                1996
+                LabourLink.NONE,
+                "CompanyOne"
         );
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.of(customer));
         when(customerRepository.existsCustomerByEmail(email)).thenReturn(false);
@@ -161,7 +167,8 @@ class CustomerServiceTest {
                 update.name(),
                 update.email(),
                 customer.getPassword(),
-                update.yearOfBirth()
+                update.labourLink(),
+                update.company()
         ))).thenReturn(id);
 
         // when
@@ -174,7 +181,8 @@ class CustomerServiceTest {
         assertThat(updatingItem.getId()).isEqualTo(id);
         assertThat(updatingItem.getName()).isEqualTo(update.name());
         assertThat(updatingItem.getEmail()).isEqualTo(update.email());
-        assertThat(updatingItem.getYearOfBirth()).isEqualTo(update.yearOfBirth());
+        assertThat(updatingItem.getLabourLink()).isEqualTo(update.labourLink());
+        assertThat(updatingItem.getCompany()).isEqualTo(update.company());
         assertThat(actual).isEqualTo(new IdResponse(id));
     }
 
@@ -187,12 +195,14 @@ class CustomerServiceTest {
                 "John Doe",
                 "johndoe@email.com",
                 "hashedpassword",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         CustomerUpdateRequest update = new CustomerUpdateRequest(
                 "Johnny Doe",
                 null,
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.of(customer));
         when(customerRepository.updateCustomer(new Customer(
@@ -200,7 +210,8 @@ class CustomerServiceTest {
                 update.name(),
                 customer.getEmail(),
                 customer.getPassword(),
-                customer.getYearOfBirth()
+                customer.getLabourLink(),
+                customer.getCompany()
         ))).thenReturn(id);
 
         // when
@@ -213,7 +224,8 @@ class CustomerServiceTest {
         assertThat(updatingItem.getId()).isEqualTo(id);
         assertThat(updatingItem.getName()).isEqualTo(update.name());
         assertThat(updatingItem.getEmail()).isEqualTo(customer.getEmail());
-        assertThat(updatingItem.getYearOfBirth()).isEqualTo(customer.getYearOfBirth());
+        assertThat(updatingItem.getLabourLink()).isEqualTo(customer.getLabourLink());
+        assertThat(updatingItem.getCompany()).isEqualTo(customer.getCompany());
         assertThat(actual).isEqualTo(new IdResponse(id));
     }
 
@@ -226,13 +238,15 @@ class CustomerServiceTest {
                 "John Doe",
                 "johndoe@email.com",
                 "hashedpassword",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         String email = "johnnydoe@email.com";
         CustomerUpdateRequest update = new CustomerUpdateRequest(
                 "John Doe",
                 email,
-                null
+                null,
+                "CompanyOne"
         );
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.of(customer));
         when(customerRepository.existsCustomerByEmail(email)).thenReturn(false);
@@ -241,7 +255,8 @@ class CustomerServiceTest {
                 customer.getName(),
                 update.email(),
                 customer.getPassword(),
-                customer.getYearOfBirth()
+                customer.getLabourLink(),
+                customer.getCompany()
         ))).thenReturn(id);
 
         // when
@@ -254,12 +269,13 @@ class CustomerServiceTest {
         assertThat(updatingItem.getId()).isEqualTo(id);
         assertThat(updatingItem.getName()).isEqualTo(customer.getName());
         assertThat(updatingItem.getEmail()).isEqualTo(update.email());
-        assertThat(updatingItem.getYearOfBirth()).isEqualTo(customer.getYearOfBirth());
+        assertThat(updatingItem.getLabourLink()).isEqualTo(customer.getLabourLink());
+        assertThat(updatingItem.getCompany()).isEqualTo(customer.getCompany());
         assertThat(actual).isEqualTo(new IdResponse(id));
     }
 
     @Test
-    void updateCustomerYearOfBirthOnly() {
+    void updateCustomerLabourLinkOnly() {
         // given
         Long id = 1L;
         Customer customer = new Customer(
@@ -267,12 +283,14 @@ class CustomerServiceTest {
                 "John Doe",
                 "johndoe@email.com",
                 "hashedpassword",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         CustomerUpdateRequest update = new CustomerUpdateRequest(
                 null,
                 "johndoe@email.com",
-                1996
+                LabourLink.FELLOW_STUDENT,
+                "CompanyOne"
         );
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.of(customer));
         when(customerRepository.updateCustomer(new Customer(
@@ -280,7 +298,8 @@ class CustomerServiceTest {
                 customer.getName(),
                 customer.getEmail(),
                 customer.getPassword(),
-                update.yearOfBirth()
+                update.labourLink(),
+                customer.getCompany()
         ))).thenReturn(id);
 
         // when
@@ -293,7 +312,8 @@ class CustomerServiceTest {
         assertThat(updatingItem.getId()).isEqualTo(id);
         assertThat(updatingItem.getName()).isEqualTo(customer.getName());
         assertThat(updatingItem.getEmail()).isEqualTo(customer.getEmail());
-        assertThat(updatingItem.getYearOfBirth()).isEqualTo(update.yearOfBirth());
+        assertThat(updatingItem.getLabourLink()).isEqualTo(update.labourLink());
+        assertThat(updatingItem.getCompany()).isEqualTo(customer.getCompany());
         assertThat(actual).isEqualTo(new IdResponse(id));
     }
 
@@ -305,7 +325,8 @@ class CustomerServiceTest {
         CustomerUpdateRequest update = new CustomerUpdateRequest(
                 "Johnny Doe",
                 email,
-                1996
+                LabourLink.NONE,
+                "CompanyOne"
         );
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.empty());
 
@@ -324,13 +345,15 @@ class CustomerServiceTest {
                 "John Doe",
                 "johndoe@email.com",
                 "hashedpassword",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         String email = "johnnydoe@email.com";
         CustomerUpdateRequest update = new CustomerUpdateRequest(
                 "John Doe",
                 email,
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.of(customer));
         when(customerRepository.existsCustomerByEmail(email)).thenReturn(true);
@@ -350,13 +373,15 @@ class CustomerServiceTest {
                 "John Doe",
                 "johndoe@email.com",
                 "hashedpassword",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         String email = "johndoe@email.com";
         CustomerUpdateRequest update = new CustomerUpdateRequest(
                 "John Doe",
                 email,
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         when(customerRepository.getCustomerById(id)).thenReturn(Optional.of(customer));
 

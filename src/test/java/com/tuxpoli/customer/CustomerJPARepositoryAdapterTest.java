@@ -7,8 +7,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Sort;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -64,7 +62,8 @@ class CustomerJPARepositoryAdapterTest {
                 "John Doe",
                 "johndoe@email.com",
                 "hashedpassword",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         when(customerJPARepository.save(customer)).thenReturn(
                 new Customer(
@@ -72,7 +71,8 @@ class CustomerJPARepositoryAdapterTest {
                         customer.getName(),
                         customer.getEmail(),
                         customer.getPassword(),
-                        customer.getYearOfBirth()
+                        customer.getLabourLink(),
+                        customer.getCompany()
                 )
         );
 
@@ -125,7 +125,8 @@ class CustomerJPARepositoryAdapterTest {
                 "John Doe",
                 "johndoe@email.com",
                 "hashedpassword",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         when(customerJPARepository.save(customer)).thenReturn(customer);
 

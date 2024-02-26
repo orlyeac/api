@@ -2,6 +2,7 @@ package com.tuxpoli.auth;
 
 import com.tuxpoli.customer.Customer;
 import com.tuxpoli.customer.IdResponse;
+import com.tuxpoli.customer.LabourLink;
 import com.tuxpoli.jwt.JWTUtility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,8 @@ class AuthenticationServiceTest {
                 "John Doe",
                 "johndoe@email.com",
                 "hashedpassword",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         AuthenticationRequest authenticationRequest = new AuthenticationRequest(
                 "johndoe@email.com",

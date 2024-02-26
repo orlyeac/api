@@ -84,10 +84,17 @@ public class CustomerService {
             modified = true;
         }
         if (
-                update.yearOfBirth() != null &&
-                !update.yearOfBirth().equals(customer.getYearOfBirth())
+                update.labourLink() != null &&
+                !update.labourLink().equals(customer.getLabourLink())
         ) {
-            customer.setYearOfBirth(update.yearOfBirth());
+            customer.setLabourLink(update.labourLink());
+            modified = true;
+        }
+        if (
+                update.company() != null &&
+                !update.company().equals(customer.getCompany())
+        ) {
+            customer.setCompany(update.company());
             modified = true;
         }
         if (!modified) {

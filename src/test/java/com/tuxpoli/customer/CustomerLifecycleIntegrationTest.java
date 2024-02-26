@@ -1,6 +1,5 @@
 package com.tuxpoli.customer;
 
-import com.tuxpoli.TestcontainersConfig;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -75,12 +74,14 @@ public class CustomerLifecycleIntegrationTest {
         // given
         String name = "Peter Smith";
         String email = "petersmith@email.com";
-        Integer yearOfBirth = 1996;
+        LabourLink labourLink = LabourLink.NONE;
+        String company = "CompanyOne";
         CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
                 name,
                 email,
                 "password",
-                yearOfBirth
+                labourLink,
+                company
         );
 
         // when
@@ -128,7 +129,8 @@ public class CustomerLifecycleIntegrationTest {
                         idResponse.id(),
                         name,
                         email,
-                        yearOfBirth,
+                        labourLink,
+                        company,
                         List.of("ROLE_USER")
                 ));
 
@@ -137,7 +139,8 @@ public class CustomerLifecycleIntegrationTest {
                         idResponse.id(),
                         name,
                         email,
-                        yearOfBirth,
+                        labourLink,
+                        company,
                         List.of("ROLE_USER")
                 ));
     }
@@ -149,15 +152,18 @@ public class CustomerLifecycleIntegrationTest {
                 "John Doe",
                 "johnnydoe@email.com",
                 "password",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         String name = "Johnny Doe";
         String email = "johnnydoe@email.com";
-        Integer yearOfBirth = 1996;
+        LabourLink labourLink = LabourLink.NONE;
+        String company = "CompanyOne";
         CustomerUpdateRequest customerUpdateRequest = new CustomerUpdateRequest(
                 name,
                 email,
-                yearOfBirth
+                labourLink,
+                company
         );
 
         // when
@@ -203,7 +209,8 @@ public class CustomerLifecycleIntegrationTest {
                         idResponse.id(),
                         name,
                         email,
-                        yearOfBirth,
+                        labourLink,
+                        company,
                         List.of("ROLE_USER")
                 ));
     }
@@ -215,14 +222,16 @@ public class CustomerLifecycleIntegrationTest {
                 "Jane Doe",
                 "janedoe@email.com",
                 "password",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
 
         CustomerCreateRequest customerCreateRequestToDelete = new CustomerCreateRequest(
                 "John Doe",
                 "johndoe@email.com",
                 "password",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
 
         // when
@@ -237,7 +246,6 @@ public class CustomerLifecycleIntegrationTest {
                 .expectBody(new ParameterizedTypeReference<IdResponse>() {
                 })
                 .returnResult();
-        IdResponse idResponseDelete = entityExchangeResultDelete.getResponseBody();
         String tokenDelete = entityExchangeResultDelete.getResponseHeaders()
                 .getFirst(HttpHeaders.AUTHORIZATION);
 

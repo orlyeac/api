@@ -5,5 +5,6 @@ CREATE TABLE customer(
     name TEXT NOT NULL,
     email TEXT NOT NULL,
     password TEXT NOT NULL,
-    year_of_birth INT NOT NULL
+    labour_link TEXT NOT NULL,
+    company TEXT
 );

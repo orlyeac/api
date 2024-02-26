@@ -14,7 +14,8 @@ public class CustomerToCustomerResponseMapper implements Function<Customer, Cust
                 customer.getId(),
                 customer.getName(),
                 customer.getEmail(),
-                customer.getYearOfBirth(),
+                customer.getLabourLink(),
+                customer.getCompany(),
                 customer.getAuthorities()
                         .stream()
                         .map(GrantedAuthority::getAuthority)

@@ -1,10 +1,7 @@
 package com.tuxpoli.auth;
 
 import com.tuxpoli.TestcontainersConfig;
-import com.tuxpoli.customer.CustomerCreateRequest;
-import com.tuxpoli.customer.CustomerResponse;
-import com.tuxpoli.customer.CustomerUpdateRequest;
-import com.tuxpoli.customer.IdResponse;
+import com.tuxpoli.customer.*;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -81,7 +78,8 @@ public class AuthenticationIntegrationTest {
                 "Petra Smith",
                 "petrasmith@email.com",
                 "password",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         AuthenticationRequest authenticationRequest = new AuthenticationRequest(
                 "petrasmith@email.com",

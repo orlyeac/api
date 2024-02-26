@@ -32,7 +32,8 @@ public class SecurityFilterChainConfig {
     public SecurityFilterChainConfig(
             AuthenticationProvider authenticationProvider,
             JWTAuthenticationFilter jwtAuthenticationFilter,
-            AuthenticationEntryPoint authenticationEntryPoint, CustomerRepository customerRepository, IdAndAuthorityFilter idAndAuthorityFilter
+            AuthenticationEntryPoint authenticationEntryPoint,
+            IdAndAuthorityFilter idAndAuthorityFilter
     ) {
         this.authenticationProvider = authenticationProvider;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;

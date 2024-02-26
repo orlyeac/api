@@ -20,7 +20,8 @@ public class CustomerCreateRequestToCustomerMapper implements Function<CustomerC
                 customerCreateRequest.name(),
                 customerCreateRequest.email(),
                 passwordEncoder.encode(customerCreateRequest.password()),
-                customerCreateRequest.yearOfBirth()
+                customerCreateRequest.labourLink(),
+                customerCreateRequest.company()
         );
     }
 }

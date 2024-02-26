@@ -26,7 +26,8 @@ class CustomerJPARepositoryTest extends TestcontainersConfig {
                 "John Doe",
                 email,
                 "hashedpassword",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         underTest.save(customer);
 
@@ -56,7 +57,8 @@ class CustomerJPARepositoryTest extends TestcontainersConfig {
                 "John Doe",
                 "johndoe@email.com",
                 "hashedpassword",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         Long id = underTest.save(customer).getId();
 
@@ -87,7 +89,8 @@ class CustomerJPARepositoryTest extends TestcontainersConfig {
                 "John Doe",
                 email,
                 "hashedpassword",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         ));
 
         // when

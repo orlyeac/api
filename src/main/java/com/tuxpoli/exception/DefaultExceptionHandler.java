@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -30,6 +31,19 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ApiException> handleException(
             NotFoundException e,
+            HttpServletRequest request
+    ) {
+        return new ResponseEntity<>(new ApiException(
+                request.getRequestURI(),
+                e.getMessage(),
+                HttpStatus.NOT_FOUND.value(),
+                LocalDateTime.now()
+        ), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ApiException> handleException(
+            UsernameNotFoundException e,
             HttpServletRequest request
     ) {
         return new ResponseEntity<>(new ApiException(

@@ -41,7 +41,8 @@ class CustomerUserDetailServiceTest {
                 "John Doe",
                 "johndoe@email.com",
                 "hashedpassword",
-                1994
+                LabourLink.NONE,
+                "CompanyOne"
         );
         when(customerRepository.getCustomerByEmail(email)).thenReturn(
                 Optional.of(customer));

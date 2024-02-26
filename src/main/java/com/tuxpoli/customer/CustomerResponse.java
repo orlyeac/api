@@ -6,7 +6,8 @@ public record CustomerResponse(
         Long id,
         String name,
         String email,
-        Integer yearOfBirth,
+        LabourLink labourLink,
+        String company,
         List<String> authority
 ) {
 
