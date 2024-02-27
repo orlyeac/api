@@ -11,8 +11,8 @@ import java.util.List;
 @RequestMapping(path = "api/v1/customers")
 public class CustomerController {
 
-    private CustomerService customerService;
-    private JWTUtility jwtUtility;
+    private final CustomerService customerService;
+    private final JWTUtility jwtUtility;
 
     public CustomerController(CustomerService customerService, JWTUtility jwtUtility) {
         this.customerService = customerService;

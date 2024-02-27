@@ -4,10 +4,7 @@ import com.tuxpoli.customer.Customer;
 import com.tuxpoli.customer.CustomerRepository;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
-
-import java.util.function.Function;
 
 @Component
 public class IdAndAuthorityFilter {
