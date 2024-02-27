@@ -1,7 +1,6 @@
 package com.tuxpoli.auth;
 
 import com.tuxpoli.customer.Customer;
-import com.tuxpoli.customer.CustomerToCustomerResponseMapper;
 import com.tuxpoli.customer.IdResponse;
 import com.tuxpoli.jwt.JWTUtility;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -1,6 +1,5 @@
 package com.tuxpoli.security;
 
-import com.tuxpoli.customer.CustomerRepository;
 import com.tuxpoli.jwt.JWTAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
