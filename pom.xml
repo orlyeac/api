@@ -17,6 +17,7 @@
 		<java.version>17</java.version>
 		<testcontainers.version>1.19.3</testcontainers.version>
 		<jsonwebtoken.jjwt.version>0.12.3</jsonwebtoken.jjwt.version>
+		<docker.image.tag/>
 	</properties>
 	<dependencies>
 		<dependency>
