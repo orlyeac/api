@@ -191,7 +191,7 @@
 						</platforms>
 					</from>
 					<to>
-						<image>docker.io/tuxpoli/${project.artifactId}:${project.version}</image>
+						<image>docker.io/tuxpoli/${project.artifactId}:${project.version}.${docker.image.tag}</image>
 						<tags>
 							<tag>latest</tag>
 						</tags>
