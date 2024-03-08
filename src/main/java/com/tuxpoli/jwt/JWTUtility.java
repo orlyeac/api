@@ -3,6 +3,7 @@ package com.tuxpoli.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -15,7 +16,8 @@ import java.util.Map;
 @Service
 public class JWTUtility {
 
-    private static final String SECRET_KEY = "w3b t0k3n 3ncrypt s3cr3t k3y w3b t0k3n 3ncrypt s3cr3t k3y";
+    @Value("${jwt.secret}")
+    private String SECRET_KEY;
 
     public String issueToken(String subject) {
         return issueToken(subject, Map.of());
