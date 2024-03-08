@@ -8,6 +8,9 @@ cors:
   allowed-headers: "*"
   exposed-headers: "*"
 
+jwt:
+  secret: "w3b t0k3n 3ncrypt s3cr3t k3y w3b t0k3n 3ncrypt s3cr3t k3y"
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/customer
