@@ -15,7 +15,6 @@ jobs:
         env:
           POSTGRES_USER: tuxpoli
           POSTGRES_PASSWORD: tuxpoli
-          POSTGRES_DB: customer
         ports:
           - 5432:5432
         options:
@@ -38,6 +37,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+      - name: adding customer database
+        run: docker exec postgres psql -U tuxpoli -W tuxpoli -c 'CREATE DATABASE customer;'
+      - name: adding notification database
+        run: docker exec postgres psql -U tuxpoli -W tuxpoli -c 'CREATE DATABASE notification;'
       - name: making id to compile
         id: idcompile
         run: echo "BUILD_NUMBER=$(date '+%Y.%m.%d.%H.%M.%S')" >> $GITHUB_OUTPUT
