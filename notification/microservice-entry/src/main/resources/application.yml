@@ -1,0 +1,30 @@
+server:
+  error:
+    include-message: always
+
+spring:
+  application:
+    name: notification
+  datasource:
+    url: jdbc:postgresql://localhost:5432/notification
+    username: tuxpoli
+    password: tuxpoli
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format-sql: true
+    show-sql: false
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: orlye.ac@gmail.com
+    password: confidential
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
