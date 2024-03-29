@@ -39,11 +39,11 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
       - name: find name
         id: findname
-        run: echo "THE_NAME=$(docker ps | grep postgres)" >> $GITHUB_OUTPUT
+        run: THE_INITIAL_NAME=$(docker ps | grep postgres) && echo "THE_NAME=${THE_INITIAL_NAME%% *}" >> $GITHUB_OUTPUT
       - name: adding customer database
-        run: docker exec ${{steps.findname.output.THE_NAME%% *}} psql -U tuxpoli -W tuxpoli -c 'CREATE DATABASE customer;'
+        run: docker exec ${{steps.findname.output.THE_NAME}} psql -U tuxpoli -W tuxpoli -c 'CREATE DATABASE customer;'
       - name: adding notification database
-        run: docker exec ${{steps.findname.output.THE_NAME%% *}} psql -U tuxpoli -W tuxpoli -c 'CREATE DATABASE notification;'
+        run: docker exec ${{steps.findname.output.THE_NAME}} psql -U tuxpoli -W tuxpoli -c 'CREATE DATABASE notification;'
       - name: making id to compile
         id: idcompile
         run: echo "BUILD_NUMBER=$(date '+%Y.%m.%d.%H.%M.%S')" >> $GITHUB_OUTPUT
