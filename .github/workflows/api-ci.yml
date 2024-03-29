@@ -35,8 +35,8 @@ jobs:
         id: findname
         run: echo "THE_NAME=$(docker ps | grep postgres)" >> $GITHUB_OUTPUT
       - name: adding customer database
-        run: docker exec ${{steps.findname.output.THE_NAME}%% *} psql -U tuxpoli -W tuxpoli -c 'CREATE DATABASE customer;'
+        run: docker exec ${{steps.findname.output.THE_NAME%% *}} psql -U tuxpoli -W tuxpoli -c 'CREATE DATABASE customer;'
       - name: adding notification database
-        run: docker exec ${{steps.findname.output.THE_NAME}%% *} psql -U tuxpoli -W tuxpoli -c 'CREATE DATABASE notification;'
+        run: docker exec ${{steps.findname.output.THE_NAME%% *}} psql -U tuxpoli -W tuxpoli -c 'CREATE DATABASE notification;'
       - name: unit and integration tests if compiled
         run: mvn -ntp -B verify
