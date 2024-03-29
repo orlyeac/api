@@ -1,0 +1,28 @@
+server:
+  error:
+    include-message: always
+
+cors:
+  allowed-origins: "*"
+  allowed-methods: "*"
+  allowed-headers: "*"
+  exposed-headers: "*"
+
+jwt:
+  secret: "w3b t0k3n 3ncrypt s3cr3t k3y w3b t0k3n 3ncrypt s3cr3t k3y"
+
+spring:
+  application:
+    name: customer
+  datasource:
+    url: jdbc:postgresql://localhost:5432/customer
+    username: tuxpoli
+    password: tuxpoli
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format-sql: true
+    show-sql: false

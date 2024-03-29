@@ -11,7 +11,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - postgres
+      - api
     restart: unless-stopped
 
   pgadmin:
@@ -26,11 +26,20 @@ services:
     ports:
       - "5050:80"
     networks:
-      - postgres
+      - api
     restart: unless-stopped
 
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - api
+
 networks:
-  postgres:
+  api:
     driver: bridge
 
 volumes:
