@@ -17,4 +17,12 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.tuxpoli.common</groupId>
+            <artifactId>domain</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+    </dependencies>
 </project>

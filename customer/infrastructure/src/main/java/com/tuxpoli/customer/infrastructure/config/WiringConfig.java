@@ -1,13 +1,15 @@
 package com.tuxpoli.customer.infrastructure.config;
 
+import com.tuxpoli.common.domain.EventBus;
 import com.tuxpoli.customer.application.mapper.CustomerToCustomerResponseMapper;
 import com.tuxpoli.customer.application.service.*;
 import com.tuxpoli.customer.application.service.auth.AuthenticationService;
 import com.tuxpoli.customer.domain.*;
 import com.tuxpoli.customer.domain.auth.AuthenticationUtility;
-import com.tuxpoli.customer.infrastructure.amqp.bus.EventBusAdapter;
+import com.tuxpoli.mq.infrastructure.EventBusAMQPAdapter;
 import com.tuxpoli.customer.infrastructure.auth.AuthenticationUtilityAdapter;
 import com.tuxpoli.customer.infrastructure.security.PasswordEncodeUtilityAdapter;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,8 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class WiringConfig {
 
     @Bean
-    EventBus eventBus() {
-        return new EventBusAdapter();
+    EventBus eventBus(AmqpTemplate amqpTemplate) {
+        return new EventBusAMQPAdapter(amqpTemplate);
     }
 
     @Bean

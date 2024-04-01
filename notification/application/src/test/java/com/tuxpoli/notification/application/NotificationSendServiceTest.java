@@ -1,9 +1,11 @@
 package com.tuxpoli.notification.application;
 
+import com.tuxpoli.common.application.NotificationSendRequest;
 import com.tuxpoli.notification.domain.EmailSender;
+
 import com.tuxpoli.notification.domain.NotificationRepository;
 import com.tuxpoli.notification.domain.model.Notification;
-import com.tuxpoli.notification.domain.model.NotificationKind;
+import com.tuxpoli.common.domain.NotificationKind;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

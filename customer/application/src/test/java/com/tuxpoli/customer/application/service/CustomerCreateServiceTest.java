@@ -3,7 +3,7 @@ package com.tuxpoli.customer.application.service;
 import com.tuxpoli.customer.application.request.CustomerCreateRequest;
 import com.tuxpoli.customer.application.response.IdResponse;
 import com.tuxpoli.customer.domain.CustomerRepository;
-import com.tuxpoli.customer.domain.EventBus;
+import com.tuxpoli.common.domain.EventBus;
 import com.tuxpoli.customer.domain.PasswordEncodeUtility;
 import com.tuxpoli.customer.domain.exception.DuplicateException;
 import com.tuxpoli.customer.domain.model.Customer;
@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

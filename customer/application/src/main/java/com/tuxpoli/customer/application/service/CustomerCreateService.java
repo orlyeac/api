@@ -1,5 +1,8 @@
 package com.tuxpoli.customer.application.service;
 
+import com.tuxpoli.common.application.NotificationSendRequest;
+import com.tuxpoli.common.domain.EventBus;
+import com.tuxpoli.common.domain.NotificationKind;
 import com.tuxpoli.customer.application.request.CustomerCreateRequest;
 import com.tuxpoli.customer.application.response.IdResponse;
 import com.tuxpoli.customer.domain.*;
@@ -48,6 +51,15 @@ public class CustomerCreateService {
                 LocalDateTime.now()
         );
         Long id = customerRepository.createCustomer(customer);
+        eventBus.publish(
+                new NotificationSendRequest(
+                        id,
+                        customer.getEmail(),
+                        customer.getName(),
+                        NotificationKind.WELCOME
+                ),
+                "notification"
+        );
         return new IdResponse(id);
     }
 }

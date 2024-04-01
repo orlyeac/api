@@ -1,5 +1,7 @@
 package com.tuxpoli.notification.domain.model;
 
+import com.tuxpoli.common.domain.NotificationKind;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 

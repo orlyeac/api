@@ -5,16 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.tuxpoli</groupId>
-        <artifactId>api</artifactId>
+        <artifactId>mq</artifactId>
         <version>0.1.0</version>
     </parent>
 
-    <artifactId>amqp</artifactId>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>infrastructure</module>
-    </modules>
+    <groupId>com.tuxpoli.mq</groupId>
+    <artifactId>infrastructure</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -22,4 +18,15 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.tuxpoli.common</groupId>
+            <artifactId>domain</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+    </dependencies>
 </project>

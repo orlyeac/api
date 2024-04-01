@@ -1,6 +1,6 @@
-package com.tuxpoli.notification.application;
+package com.tuxpoli.common.application;
 
-import com.tuxpoli.notification.domain.model.NotificationKind;
+import com.tuxpoli.common.domain.NotificationKind;
 
 public record NotificationSendRequest(
         Long toId,

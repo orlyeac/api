@@ -1,5 +1,6 @@
 package com.tuxpoli.notification.application;
 
+import com.tuxpoli.common.application.NotificationSendRequest;
 import com.tuxpoli.notification.domain.*;
 import com.tuxpoli.notification.domain.model.Notification;
 
