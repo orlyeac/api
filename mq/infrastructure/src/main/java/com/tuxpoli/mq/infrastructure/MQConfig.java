@@ -1,4 +1,4 @@
-package com.tuxpoli.amqp.infrastructure;
+package com.tuxpoli.mq.infrastructure;
 
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;

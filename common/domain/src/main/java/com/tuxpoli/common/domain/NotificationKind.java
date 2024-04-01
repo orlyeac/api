@@ -1,4 +1,4 @@
-package com.tuxpoli.notification.domain.model;
+package com.tuxpoli.common.domain;
 
 public enum NotificationKind {
     WELCOME(

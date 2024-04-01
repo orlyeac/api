@@ -10,8 +10,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(
 		scanBasePackages = {
+				"com.tuxpoli.common.domain",
 				"com.tuxpoli.customer.domain",
 				"com.tuxpoli.customer.application",
+				"com.tuxpoli.mq.infrastructure",
 				"com.tuxpoli.customer.infrastructure"
 		}
 )

@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.tuxpoli</groupId>
-        <artifactId>customer</artifactId>
+        <artifactId>common</artifactId>
         <version>0.1.0</version>
     </parent>
 
-    <groupId>com.tuxpoli.customer</groupId>
+    <groupId>com.tuxpoli.common</groupId>
     <artifactId>domain</artifactId>
 
     <properties>
@@ -18,12 +18,4 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-
-    <dependencies>
-        <dependency>
-            <groupId>com.tuxpoli.common</groupId>
-            <artifactId>domain</artifactId>
-            <version>0.1.0</version>
-        </dependency>
-    </dependencies>
 </project>

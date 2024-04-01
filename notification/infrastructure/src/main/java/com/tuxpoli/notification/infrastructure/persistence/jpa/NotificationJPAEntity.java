@@ -1,6 +1,6 @@
 package com.tuxpoli.notification.infrastructure.persistence.jpa;
 
-import com.tuxpoli.notification.domain.model.NotificationKind;
+import com.tuxpoli.common.domain.NotificationKind;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

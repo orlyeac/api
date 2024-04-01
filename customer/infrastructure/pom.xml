@@ -62,6 +62,11 @@
             <artifactId>application</artifactId>
             <version>0.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.tuxpoli.mq</groupId>
+            <artifactId>infrastructure</artifactId>
+            <version>0.1.0</version>
+        </dependency>
     </dependencies>
 
 </project>
