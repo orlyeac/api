@@ -37,6 +37,7 @@ services:
       - "15672:15672"
     networks:
       - api
+    restart: unless-stopped
 
 networks:
   api:

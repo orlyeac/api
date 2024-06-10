@@ -1,10 +1,10 @@
 package com.tuxpoli.customer.infrastructure.controller.auth;
 
 import com.tuxpoli.customer.application.request.auth.AuthenticationRequest;
-import com.tuxpoli.customer.application.response.IdResponse;
+import com.tuxpoli.common.application.IdResponse;
 import com.tuxpoli.customer.domain.auth.AuthenticationData;
 import com.tuxpoli.customer.application.service.auth.AuthenticationService;
-import com.tuxpoli.customer.infrastructure.jwt.JWTUtility;
+import com.tuxpoli.axiom.infrastructure.jwt.JWTUtility;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +35,7 @@ public class AuthenticationController {
                 .header(
                         HttpHeaders.AUTHORIZATION,
                         jwtUtility.issueToken(
+                                response.id().toString(),
                                 response.email(),
                                 response.authority()
                         )

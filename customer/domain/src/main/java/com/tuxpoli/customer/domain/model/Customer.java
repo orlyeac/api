@@ -1,6 +1,7 @@
 package com.tuxpoli.customer.domain.model;
 
-import com.tuxpoli.customer.domain.exception.WithoutChangeException;
+import com.tuxpoli.common.domain.LabourLink;
+import com.tuxpoli.common.domain.exception.WithoutChangeException;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

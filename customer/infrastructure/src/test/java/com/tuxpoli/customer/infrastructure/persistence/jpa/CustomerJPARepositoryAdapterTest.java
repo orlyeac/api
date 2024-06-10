@@ -1,7 +1,7 @@
 package com.tuxpoli.customer.infrastructure.persistence.jpa;
 
 import com.tuxpoli.customer.domain.model.Customer;
-import com.tuxpoli.customer.domain.model.LabourLink;
+import com.tuxpoli.common.domain.LabourLink;
 import com.tuxpoli.customer.infrastructure.mapper.CustomerJPAEntityToCustomerMapper;
 import com.tuxpoli.customer.infrastructure.mapper.CustomerToCustomerJPAEntityMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -14,7 +14,6 @@ import org.springframework.data.domain.Sort;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

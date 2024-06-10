@@ -1,6 +1,6 @@
 package com.tuxpoli.customer.application.request;
 
-import com.tuxpoli.customer.domain.model.LabourLink;
+import com.tuxpoli.common.domain.LabourLink;
 
 public record CustomerCreateRequest(
         String name,

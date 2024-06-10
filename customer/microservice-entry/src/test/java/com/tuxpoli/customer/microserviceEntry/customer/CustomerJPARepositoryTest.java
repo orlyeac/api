@@ -1,6 +1,6 @@
 package com.tuxpoli.customer.microserviceEntry.customer;
 
-import com.tuxpoli.customer.domain.model.LabourLink;
+import com.tuxpoli.common.domain.LabourLink;
 import com.tuxpoli.customer.infrastructure.persistence.jpa.CustomerJPAEntity;
 import com.tuxpoli.customer.infrastructure.persistence.jpa.CustomerJPARepository;
 import com.tuxpoli.customer.microserviceEntry.TestcontainersConfig;

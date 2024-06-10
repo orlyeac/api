@@ -1,6 +1,6 @@
 package com.tuxpoli.customer.infrastructure.persistence.jpa;
 
-import com.tuxpoli.customer.domain.model.LabourLink;
+import com.tuxpoli.common.domain.LabourLink;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -152,6 +152,10 @@ public class CustomerJPAEntity implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public LabourLink getLabourLink() {

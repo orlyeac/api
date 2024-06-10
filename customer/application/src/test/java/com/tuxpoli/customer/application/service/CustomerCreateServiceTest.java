@@ -1,13 +1,13 @@
 package com.tuxpoli.customer.application.service;
 
 import com.tuxpoli.customer.application.request.CustomerCreateRequest;
-import com.tuxpoli.customer.application.response.IdResponse;
+import com.tuxpoli.common.application.IdResponse;
 import com.tuxpoli.customer.domain.CustomerRepository;
 import com.tuxpoli.common.domain.EventBus;
 import com.tuxpoli.customer.domain.PasswordEncodeUtility;
-import com.tuxpoli.customer.domain.exception.DuplicateException;
+import com.tuxpoli.common.domain.exception.DuplicateException;
 import com.tuxpoli.customer.domain.model.Customer;
-import com.tuxpoli.customer.domain.model.LabourLink;
+import com.tuxpoli.common.domain.LabourLink;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

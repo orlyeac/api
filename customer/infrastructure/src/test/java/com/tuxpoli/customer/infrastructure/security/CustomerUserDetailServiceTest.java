@@ -2,7 +2,7 @@ package com.tuxpoli.customer.infrastructure.security;
 
 import com.tuxpoli.customer.domain.CustomerRepository;
 import com.tuxpoli.customer.domain.model.Customer;
-import com.tuxpoli.customer.domain.model.LabourLink;
+import com.tuxpoli.common.domain.LabourLink;
 import com.tuxpoli.customer.infrastructure.persistence.jpa.CustomerJPAEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

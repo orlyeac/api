@@ -1,7 +1,7 @@
 package com.tuxpoli.customer.infrastructure.controller;
 
 import com.tuxpoli.customer.application.service.CustomerListService;
-import com.tuxpoli.customer.application.response.CustomerResponse;
+import com.tuxpoli.common.application.CustomerResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

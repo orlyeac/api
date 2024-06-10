@@ -1,9 +1,9 @@
 package com.tuxpoli.customer.application.service;
 
 import com.tuxpoli.customer.application.mapper.CustomerToCustomerResponseMapper;
-import com.tuxpoli.customer.application.response.CustomerResponse;
+import com.tuxpoli.common.application.CustomerResponse;
 import com.tuxpoli.customer.domain.CustomerRepository;
-import com.tuxpoli.customer.domain.exception.NotFoundException;
+import com.tuxpoli.common.domain.exception.NotFoundException;
 
 public class CustomerGetByIdService {
 

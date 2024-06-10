@@ -1,8 +1,8 @@
 package com.tuxpoli.customer.application.service;
 
-import com.tuxpoli.customer.application.response.IdResponse;
+import com.tuxpoli.common.application.IdResponse;
 import com.tuxpoli.customer.domain.CustomerRepository;
-import com.tuxpoli.customer.domain.exception.NotFoundException;
+import com.tuxpoli.common.domain.exception.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

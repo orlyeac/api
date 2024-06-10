@@ -1,11 +1,11 @@
 package com.tuxpoli.notification.application;
 
-import com.tuxpoli.common.application.NotificationSendRequest;
+import com.tuxpoli.common.domain.CustomerCreatedEvent;
 import com.tuxpoli.notification.domain.EmailSender;
 
 import com.tuxpoli.notification.domain.NotificationRepository;
 import com.tuxpoli.notification.domain.model.Notification;
-import com.tuxpoli.common.domain.NotificationKind;
+import com.tuxpoli.notification.domain.model.NotificationKind;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,11 +38,12 @@ class NotificationSendServiceTest {
     @Test
     void send() {
         // given
-        NotificationSendRequest notificationSendRequest = new NotificationSendRequest(
+        CustomerCreatedEvent customerCreatedEvent = new CustomerCreatedEvent(
                 1L,
-                "johndoe@email.com",
                 "John Doe",
-                NotificationKind.WELCOME
+                "johndoe@email.com",
+                "NONE",
+                "Tuxpoli"
         );
         LocalDateTime createdAt = LocalDateTime.now();
         Notification notification = new Notification(
@@ -60,7 +61,7 @@ class NotificationSendServiceTest {
         when(notificationRepository.save(notification)).thenReturn(1L);
 
         // when
-        underTest.send(notificationSendRequest);
+        underTest.send(customerCreatedEvent);
 
         // then
         verify(notificationRepository).save(notification);

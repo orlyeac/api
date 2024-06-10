@@ -1,0 +1,36 @@
+server:
+  port: 8085
+  error:
+    include-message: always
+
+cors:
+  allowed-origins: "*"
+  allowed-methods: "*"
+  allowed-headers: "*"
+  exposed-headers: "*"
+
+jwt:
+  secret: "w3b t0k3n 3ncrypt s3cr3t k3y w3b t0k3n 3ncrypt s3cr3t k3y"
+
+spring:
+  application:
+    name: review
+  datasource:
+    url: jdbc:postgresql://localhost:5432/review
+    username: tuxpoli
+    password: tuxpoli
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format-sql: true
+    show-sql: false
+  rabbitmq:
+    addresses: localhost:5672
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

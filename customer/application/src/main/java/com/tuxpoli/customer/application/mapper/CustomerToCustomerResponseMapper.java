@@ -1,6 +1,6 @@
 package com.tuxpoli.customer.application.mapper;
 
-import com.tuxpoli.customer.application.response.CustomerResponse;
+import com.tuxpoli.common.application.CustomerResponse;
 import com.tuxpoli.customer.domain.model.Customer;
 
 import java.util.function.Function;

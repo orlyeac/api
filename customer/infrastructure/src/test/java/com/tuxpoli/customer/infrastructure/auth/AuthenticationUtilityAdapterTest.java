@@ -1,7 +1,7 @@
 package com.tuxpoli.customer.infrastructure.auth;
 
 import com.tuxpoli.customer.domain.auth.AuthenticationData;
-import com.tuxpoli.customer.domain.model.LabourLink;
+import com.tuxpoli.common.domain.LabourLink;
 import com.tuxpoli.customer.infrastructure.persistence.jpa.CustomerJPAEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

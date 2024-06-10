@@ -21,8 +21,8 @@ public class WiringConfig {
     @Value("${rabbitmq.queues.notification}")
     private String notificationQueue;
 
-    @Value("${rabbitmq.routing-keys.internal-notification}")
-    private String internalNotificationRoutingKey;
+    @Value("${rabbitmq.routing-keys.customer-created}")
+    private String internalCustomerCreatedRoutingKey;
 
     @Bean
     EmailSender emailSender(JavaMailSender mailSender) {
@@ -60,19 +60,7 @@ public class WiringConfig {
         return BindingBuilder
                 .bind(notificationQueue())
                 .to(internalTopicExchange())
-                .with(this.internalNotificationRoutingKey);
-    }
-
-    public String getInternalExchange() {
-        return internalExchange;
-    }
-
-    public String getNotificationQueue() {
-        return notificationQueue;
-    }
-
-    public String getInternalNotificationRoutingKey() {
-        return internalNotificationRoutingKey;
+                .with(this.internalCustomerCreatedRoutingKey);
     }
 
 }

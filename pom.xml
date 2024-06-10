@@ -19,6 +19,10 @@
 		<module>notification</module>
 		<module>mq</module>
 		<module>common</module>
+        <module>review</module>
+		<module>identify</module>
+        <module>apigateway</module>
+		<module>axiom</module>
 	</modules>
 	<properties>
 		<java.version>17</java.version>
@@ -57,6 +61,13 @@
 				<artifactId>spring-boot-dependencies</artifactId>
 				<scope>import</scope>
 				<version>${spring.version}</version>
+				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<scope>import</scope>
+				<version>2023.0.1</version>
 				<type>pom</type>
 			</dependency>
 		</dependencies>

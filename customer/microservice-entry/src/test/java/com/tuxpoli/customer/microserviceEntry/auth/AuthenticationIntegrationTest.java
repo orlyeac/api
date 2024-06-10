@@ -1,8 +1,8 @@
 package com.tuxpoli.customer.microserviceEntry.auth;
 
 import com.tuxpoli.customer.application.request.CustomerCreateRequest;
-import com.tuxpoli.customer.application.response.IdResponse;
-import com.tuxpoli.customer.domain.model.LabourLink;
+import com.tuxpoli.common.application.IdResponse;
+import com.tuxpoli.common.domain.LabourLink;
 import com.tuxpoli.customer.application.request.auth.AuthenticationRequest;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeAll;

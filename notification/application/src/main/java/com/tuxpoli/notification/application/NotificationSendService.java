@@ -1,6 +1,7 @@
 package com.tuxpoli.notification.application;
 
-import com.tuxpoli.common.application.NotificationSendRequest;
+import com.tuxpoli.common.domain.CustomerCreatedEvent;
+import com.tuxpoli.notification.domain.model.NotificationKind;
 import com.tuxpoli.notification.domain.*;
 import com.tuxpoli.notification.domain.model.Notification;
 
@@ -20,12 +21,12 @@ public class NotificationSendService {
         this.emailSender = emailSender;
     }
 
-    public void send(NotificationSendRequest notificationSendRequest) {
+    public void send(CustomerCreatedEvent customerCreatedEvent) {
         Notification notification = Notification.create(
-                notificationSendRequest.toId(),
-                notificationSendRequest.toEmail(),
-                notificationSendRequest.toName(),
-                notificationSendRequest.kind(),
+                customerCreatedEvent.id(),
+                customerCreatedEvent.email(),
+                customerCreatedEvent.name(),
+                NotificationKind.WELCOME,
                 LocalDateTime.now()
         );
         notificationRepository.save(notification);

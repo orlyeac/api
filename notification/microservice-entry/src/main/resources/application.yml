@@ -38,4 +38,9 @@ rabbitmq:
   queues:
     notification: notification.queue
   routing-keys:
-    internal-notification: internal.notification.routing-key
+    customer-created: internal.customer-created.routing-key
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

@@ -2,7 +2,7 @@ package com.tuxpoli.customer.infrastructure.controller;
 
 import com.tuxpoli.customer.application.service.CustomerUpdateService;
 import com.tuxpoli.customer.application.request.CustomerUpdateRequest;
-import com.tuxpoli.customer.application.response.IdResponse;
+import com.tuxpoli.common.application.IdResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

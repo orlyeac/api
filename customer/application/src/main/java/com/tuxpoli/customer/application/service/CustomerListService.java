@@ -1,7 +1,7 @@
 package com.tuxpoli.customer.application.service;
 
 import com.tuxpoli.customer.application.mapper.CustomerToCustomerResponseMapper;
-import com.tuxpoli.customer.application.response.CustomerResponse;
+import com.tuxpoli.common.application.CustomerResponse;
 import com.tuxpoli.customer.domain.CustomerRepository;
 
 import java.util.List;

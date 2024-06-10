@@ -1,12 +1,11 @@
 package com.tuxpoli.customer.application.service;
 
-import com.tuxpoli.common.application.NotificationSendRequest;
+import com.tuxpoli.common.domain.CustomerCreatedEvent;
 import com.tuxpoli.common.domain.EventBus;
-import com.tuxpoli.common.domain.NotificationKind;
 import com.tuxpoli.customer.application.request.CustomerCreateRequest;
-import com.tuxpoli.customer.application.response.IdResponse;
+import com.tuxpoli.common.application.IdResponse;
 import com.tuxpoli.customer.domain.*;
-import com.tuxpoli.customer.domain.exception.DuplicateException;
+import com.tuxpoli.common.domain.exception.DuplicateException;
 import com.tuxpoli.customer.domain.model.Customer;
 
 import java.time.LocalDateTime;
@@ -51,15 +50,16 @@ public class CustomerCreateService {
                 LocalDateTime.now()
         );
         Long id = customerRepository.createCustomer(customer);
-        eventBus.publish(
-                new NotificationSendRequest(
+        /* eventBus.publish(
+                new CustomerCreatedEvent(
                         id,
-                        customer.getEmail(),
                         customer.getName(),
-                        NotificationKind.WELCOME
+                        customer.getEmail(),
+                        customer.getLabourLink().name(),
+                        customer.getCompany()
                 ),
-                "notification"
-        );
+                "customer-created"
+        ); */
         return new IdResponse(id);
     }
 }

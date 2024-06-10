@@ -1,7 +1,7 @@
 package com.tuxpoli.notification.infrastructure.persistence.jpa;
 
 import com.tuxpoli.notification.domain.model.Notification;
-import com.tuxpoli.common.domain.NotificationKind;
+import com.tuxpoli.notification.domain.model.NotificationKind;
 import com.tuxpoli.notification.infrastructure.mapper.NotificationToNotificationJPAEntityMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

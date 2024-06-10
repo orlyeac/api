@@ -1,11 +1,11 @@
 package com.tuxpoli.customer.application.service;
 
 import com.tuxpoli.customer.application.request.CustomerUpdateRequest;
-import com.tuxpoli.customer.application.response.IdResponse;
+import com.tuxpoli.common.application.IdResponse;
 import com.tuxpoli.customer.domain.model.Customer;
 import com.tuxpoli.customer.domain.CustomerRepository;
-import com.tuxpoli.customer.domain.exception.DuplicateException;
-import com.tuxpoli.customer.domain.exception.NotFoundException;
+import com.tuxpoli.common.domain.exception.DuplicateException;
+import com.tuxpoli.common.domain.exception.NotFoundException;
 
 public class CustomerUpdateService {
 
